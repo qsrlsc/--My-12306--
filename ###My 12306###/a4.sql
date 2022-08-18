@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 18/08/2022 17:45:10
+ Date: 18/08/2022 19:15:20
 */
 
 SET NAMES utf8mb4;
@@ -581,6 +581,12 @@ INSERT INTO `sys_menu` VALUES (8, '文件管理', '/file', 'el-icon-document', N
 INSERT INTO `sys_menu` VALUES (10, '主页', '/home', 'el-icon-house', NULL, NULL, 'Home', 0);
 INSERT INTO `sys_menu` VALUES (11, '百度地图', '/map', 'el-icon-map-location', '', NULL, 'Map', 200);
 INSERT INTO `sys_menu` VALUES (13, '列车管理', '/car', 'el-icon-truck', NULL, 4, 'Car', 305);
+INSERT INTO `sys_menu` VALUES (14, '订单管理', '/order', 'el-icon-warning', NULL, 4, 'Order', 306);
+INSERT INTO `sys_menu` VALUES (15, '座位管理', '/seat', 'el-icon-files', NULL, 4, 'Seat', 307);
+INSERT INTO `sys_menu` VALUES (16, '余票管理', '/left', 'el-icon-more', NULL, 4, 'Left', 308);
+INSERT INTO `sys_menu` VALUES (17, '订单状态', '/detailorder', 'el-icon-view', NULL, 4, 'DetailOrder', 309);
+INSERT INTO `sys_menu` VALUES (18, '订单详情', '/detailtrain', 'el-icon-s-help', NULL, 4, 'DetailTrain', 310);
+INSERT INTO `sys_menu` VALUES (19, '用户界面', '/front', 'el-icon-s-grid', NULL, NULL, 'Front', 201);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -622,7 +628,14 @@ INSERT INTO `sys_role_menu` VALUES (1, 8);
 INSERT INTO `sys_role_menu` VALUES (1, 10);
 INSERT INTO `sys_role_menu` VALUES (1, 11);
 INSERT INTO `sys_role_menu` VALUES (1, 13);
+INSERT INTO `sys_role_menu` VALUES (1, 14);
+INSERT INTO `sys_role_menu` VALUES (1, 15);
+INSERT INTO `sys_role_menu` VALUES (1, 16);
+INSERT INTO `sys_role_menu` VALUES (1, 17);
+INSERT INTO `sys_role_menu` VALUES (1, 18);
 INSERT INTO `sys_role_menu` VALUES (2, 10);
+INSERT INTO `sys_role_menu` VALUES (2, 11);
+INSERT INTO `sys_role_menu` VALUES (2, 19);
 
 -- ----------------------------
 -- Table structure for sys_user
