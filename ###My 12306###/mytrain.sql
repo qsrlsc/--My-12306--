@@ -1,17 +1,17 @@
 /*
  Navicat MySQL Data Transfer
 
- Source Server         : localhost_3306
+ Source Server         : 12306
  Source Server Type    : MySQL
  Source Server Version : 80028
  Source Host           : localhost:3306
- Source Schema         : a4
+ Source Schema         : mytrain
 
  Target Server Type    : MySQL
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 18/08/2022 19:15:20
+ Date: 21/08/2022 21:28:00
 */
 
 SET NAMES utf8mb4;
@@ -29,7 +29,7 @@ CREATE TABLE `detail_order`  (
   `status` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单状态',
   PRIMARY KEY (`doid`) USING BTREE,
   INDEX `oid`(`oid`) USING BTREE,
-  CONSTRAINT `detail_order_ibfk_1` FOREIGN KEY (`oid`) REFERENCES `order` (`oid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `detail_order_ibfk_1` FOREIGN KEY (`oid`) REFERENCES `orders` (`oid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -37,11 +37,8 @@ CREATE TABLE `detail_order`  (
 -- ----------------------------
 INSERT INTO `detail_order` VALUES (1, 1, '2022-08-16', '10:55:01', '未支付');
 INSERT INTO `detail_order` VALUES (2, 2, '2022-08-17', '09:55:05', '已支付');
-INSERT INTO `detail_order` VALUES (3, 3, '2022-08-17', '08:55:08', '已支付');
 INSERT INTO `detail_order` VALUES (4, 4, '2022-08-17', '10:10:12', '已支付');
 INSERT INTO `detail_order` VALUES (5, 5, '2022-08-16', '10:55:16', '未支付');
-INSERT INTO `detail_order` VALUES (6, 6, '2022-08-16', '10:36:22', '未支付');
-INSERT INTO `detail_order` VALUES (7, 7, '2022-08-17', '06:55:25', '退款中');
 
 -- ----------------------------
 -- Table structure for detail_train
@@ -71,16 +68,16 @@ INSERT INTO `detail_train` VALUES (4, 4, 'CRH2A型动车', '沧州西站', '杭�
 INSERT INTO `detail_train` VALUES (5, 5, 'CRH2B型动车', '南京南站', '沧州站', '2022-08-17 13:59:51', '2022-08-17 19:11:32', '680公里');
 INSERT INTO `detail_train` VALUES (6, 6, 'CRH2C型动车', '长沙南站', '成都东站', '2022-08-17 14:59:54', '2022-08-17 20:11:35', '1100公里');
 INSERT INTO `detail_train` VALUES (7, 7, 'CRH2E型动车', '北京西站', '杭州东站', '2022-08-17 15:59:57', '2022-08-17 21:11:38', '800公里');
-INSERT INTO `detail_train` VALUES (8, 8, 'CRH3C型动车', '无锡东站', '杭州站', '2022-08-17 16:00:00', '2022-08-17 17:11:40', '100公里');
+INSERT INTO `detail_train` VALUES (8, 8, 'CRH3C型动车', '无锡东站', '杭州站', '2022-08-17 16:00:00', '2022-08-17 17:11:40', '777公里');
 
 -- ----------------------------
--- Table structure for left
+-- Table structure for lefts
 -- ----------------------------
-DROP TABLE IF EXISTS `left`;
-CREATE TABLE `left`  (
+DROP TABLE IF EXISTS `lefts`;
+CREATE TABLE `lefts`  (
   `lid` int(0) NOT NULL AUTO_INCREMENT COMMENT '余票表编号',
   `sdate` date NULL DEFAULT NULL COMMENT '日期',
-  `seattype` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '座位类型',
+  `seattype` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '座位类型',
   `station_id` int(0) NULL DEFAULT NULL COMMENT '车站编号',
   `tid` int(0) NULL DEFAULT NULL COMMENT '列车编号',
   `leftnum` int(0) NULL DEFAULT NULL COMMENT '剩余票数',
@@ -88,57 +85,56 @@ CREATE TABLE `left`  (
   INDEX `seattype`(`seattype`) USING BTREE,
   INDEX `station_id`(`station_id`) USING BTREE,
   INDEX `tid`(`tid`) USING BTREE,
-  CONSTRAINT `left_ibfk_1` FOREIGN KEY (`seattype`) REFERENCES `seat` (`seattype`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `left_ibfk_2` FOREIGN KEY (`station_id`) REFERENCES `station` (`station_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `left_ibfk_3` FOREIGN KEY (`tid`) REFERENCES `train` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `lefts_ibfk_1` FOREIGN KEY (`seattype`) REFERENCES `seat` (`seattype`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `lefts_ibfk_2` FOREIGN KEY (`station_id`) REFERENCES `station` (`station_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `lefts_ibfk_3` FOREIGN KEY (`tid`) REFERENCES `train` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of left
+-- Records of lefts
 -- ----------------------------
-INSERT INTO `left` VALUES (1, '2022-08-17', '二等座', 1, 1, 400);
-INSERT INTO `left` VALUES (2, '2022-08-17', '一等座', 5, 3, 100);
-INSERT INTO `left` VALUES (3, '2022-08-17', '商务座', 5, 10, 50);
-INSERT INTO `left` VALUES (4, '2022-08-18', '二等座', 6, 12, 364);
-INSERT INTO `left` VALUES (5, '2022-08-18', '一等座', 5, 11, 116);
-INSERT INTO `left` VALUES (6, '2022-08-18', '商务座', 3, 14, 34);
-INSERT INTO `left` VALUES (7, '2022-08-19', '二等座', 14, 5, 335);
-INSERT INTO `left` VALUES (8, '2022-08-19', '一等座', 8, 8, 98);
-INSERT INTO `left` VALUES (9, '2022-08-19', '商务座', 10, 6, 12);
+INSERT INTO `lefts` VALUES (1, '2022-08-17', '二等座', 1, 1, 400);
+INSERT INTO `lefts` VALUES (2, '2022-08-17', '一等座', 5, 3, 100);
+INSERT INTO `lefts` VALUES (4, '2022-08-18', '二等座', 6, 12, 364);
+INSERT INTO `lefts` VALUES (5, '2022-08-18', '一等座', 5, 11, 116);
+INSERT INTO `lefts` VALUES (7, '2022-08-19', '二等座', 14, 5, 335);
+INSERT INTO `lefts` VALUES (8, '2022-08-24', '一等座', 8, 8, 98);
+INSERT INTO `lefts` VALUES (15, '2022-08-23', '一等座', 5, 5, 55);
+INSERT INTO `lefts` VALUES (16, '2022-08-31', '一等座', 5, 5, 20);
 
 -- ----------------------------
--- Table structure for order
+-- Table structure for orders
 -- ----------------------------
-DROP TABLE IF EXISTS `order`;
-CREATE TABLE `order`  (
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE `orders`  (
   `oid` int(0) NOT NULL AUTO_INCREMENT COMMENT '订单编号',
   `pid` int(0) NULL DEFAULT NULL COMMENT '乘客编号',
   `tid` int(0) NULL DEFAULT NULL COMMENT '列车编号',
   `uid` int(0) NULL DEFAULT NULL COMMENT '用户编号',
   `doid` int(0) NULL DEFAULT NULL COMMENT '订单详情编号',
-  `extra_product` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '有无额外产品',
-  `insurance` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '有无保险',
-  `discount` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '折扣',
+  `extra_product` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '有无额外产品',
+  `insurance` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '有无保险',
+  `discount` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '折扣',
   PRIMARY KEY (`oid`) USING BTREE,
   INDEX `pid`(`pid`) USING BTREE,
   INDEX `uid`(`uid`) USING BTREE,
   INDEX `tid`(`tid`) USING BTREE,
   INDEX `doid`(`doid`) USING BTREE,
-  CONSTRAINT `order_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `passenger` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `order_ibfk_3` FOREIGN KEY (`tid`) REFERENCES `train` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `order_ibfk_4` FOREIGN KEY (`doid`) REFERENCES `detail_order` (`doid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `passenger` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`tid`) REFERENCES `train` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`doid`) REFERENCES `detail_order` (`doid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of order
+-- Records of orders
 -- ----------------------------
-INSERT INTO `order` VALUES (1, 1, 5, 2, 1, '无', '抗疫保障', '无');
-INSERT INTO `order` VALUES (2, 4, 3, 4, 2, '无', '意外险', '无');
-INSERT INTO `order` VALUES (3, 1, 5, 3, 3, '无', '抗疫保障', '无');
-INSERT INTO `order` VALUES (4, 3, 7, 5, 4, '有', '抗疫保障+意外险', '车票补贴');
-INSERT INTO `order` VALUES (5, 6, 3, 2, 5, '无', '抗疫保障+意外险', '无');
-INSERT INTO `order` VALUES (6, 5, 6, 4, 6, '无', '意外险', '无');
-INSERT INTO `order` VALUES (7, 2, 1, 3, 7, '无', '抗疫保障', '无');
+INSERT INTO `orders` VALUES (1, 1, 5, 2, 1, '无', '抗疫保障', '无');
+INSERT INTO `orders` VALUES (2, 4, 3, 4, 2, '无', '意外险', '无');
+INSERT INTO `orders` VALUES (4, 3, 7, 5, 4, '有', '抗疫保障+意外险', '车票补贴');
+INSERT INTO `orders` VALUES (5, 6, 3, 2, 5, '无', '抗疫保障+意外险', '无');
+INSERT INTO `orders` VALUES (18, 4, 4, 4, 4, '有', '有', NULL);
+INSERT INTO `orders` VALUES (23, 4, 6, 6, 5, '有', '无', NULL);
+INSERT INTO `orders` VALUES (29, 5, 9, 9, 5, '有', '有', NULL);
 
 -- ----------------------------
 -- Table structure for passenger
@@ -146,13 +142,13 @@ INSERT INTO `order` VALUES (7, 2, 1, 3, 7, '无', '抗疫保障', '无');
 DROP TABLE IF EXISTS `passenger`;
 CREATE TABLE `passenger`  (
   `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '乘客编号',
-  `pname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '乘客姓名',
-  `pidcard` varchar(22) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '乘客身份证号码',
-  `ptelephone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '乘客联系方式',
-  `psex` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '乘客性别',
-  `p_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '乘客类型（成人，儿童，学生）',
+  `pname` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '乘客姓名',
+  `pidcard` varchar(22) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '乘客身份证号码',
+  `ptelephone` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '乘客联系方式',
+  `psex` varchar(4) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '乘客性别',
+  `p_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '乘客类型（成人，儿童，学生）',
   PRIMARY KEY (`pid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of passenger
@@ -171,14 +167,14 @@ DROP TABLE IF EXISTS `seat`;
 CREATE TABLE `seat`  (
   `sid` int(0) NOT NULL AUTO_INCREMENT COMMENT '座位编号',
   `tid` int(0) NULL DEFAULT NULL COMMENT '列车编号',
-  `seattype` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '座位类型',
-  `seatlocation` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '座位位置',
-  `carriage` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '座位所在车厢',
+  `seattype` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '座位类型',
+  `seatlocation` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '座位位置',
+  `carriage` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '座位所在车厢',
   PRIMARY KEY (`sid`) USING BTREE,
   INDEX `tid`(`tid`) USING BTREE,
   INDEX `seattype`(`seattype`) USING BTREE,
-  CONSTRAINT `seat_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `train` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `seat_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `train` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of seat
@@ -197,14 +193,13 @@ INSERT INTO `seat` VALUES (11, 3, '二等座', '06A', '15');
 INSERT INTO `seat` VALUES (12, 3, '二等座', '06B', '14');
 INSERT INTO `seat` VALUES (13, 3, '二等座', '06C', '15');
 INSERT INTO `seat` VALUES (14, 3, '二等座', '06D', '15');
-INSERT INTO `seat` VALUES (15, 3, '二等座', '06F', '16');
+INSERT INTO `seat` VALUES (15, 3, '二等座', '06F', '7');
 INSERT INTO `seat` VALUES (16, 4, '一等座', '04A', '2');
 INSERT INTO `seat` VALUES (17, 4, '一等座', '04C', '2');
 INSERT INTO `seat` VALUES (18, 4, '一等座', '04D', '3');
 INSERT INTO `seat` VALUES (19, 4, '一等座', '04F', '4');
 INSERT INTO `seat` VALUES (20, 5, '商务座', '01A', '1');
 INSERT INTO `seat` VALUES (21, 5, '商务座', '01C', '15');
-INSERT INTO `seat` VALUES (22, 5, '商务座', '01F', '14');
 
 -- ----------------------------
 -- Table structure for station
@@ -241,11 +236,11 @@ INSERT INTO `station` VALUES (14, '无锡东站', '无锡市');
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE `sys_dict`  (
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
-  `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '内容',
-  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '内容',
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类型',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 281 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 281 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dict
@@ -537,21 +532,22 @@ INSERT INTO `sys_dict` VALUES (280, 'ice-cream-round', 'el-icon-ice-cream-round'
 DROP TABLE IF EXISTS `sys_file`;
 CREATE TABLE `sys_file`  (
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件名称',
-  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件类型',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名称',
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件类型',
   `size` bigint(0) NULL DEFAULT NULL COMMENT '文件大小(kb)',
-  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '下载链接',
-  `md5` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件md5',
+  `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '下载链接',
+  `md5` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件md5',
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除',
   `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用链接',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_file
 -- ----------------------------
 INSERT INTO `sys_file` VALUES (1, 'QQ图片20211216112826.jpg', 'jpg', 4127, 'http://localhost:9090/file/c14af379be274b3dbc534feaa188ab22.jpg', '7d212129f94050daedc0a74e19ccc99c', 0, 1);
 INSERT INTO `sys_file` VALUES (2, 'QQ图片20211226105026.jpg', 'jpg', 116, 'http://localhost:9090/file/5da6909bc85c4b06bcb4ea27f2e8dc41.jpg', '052d9b94ad2c35dec6eb4be31c8dbdd4', 0, 1);
+INSERT INTO `sys_file` VALUES (3, 'QQ图片20220507233652.jpg', 'jpg', 58, 'http://localhost:9090/file/e20631447c8040ceb5e8ea88df433ada.jpg', 'f0d0a947e0f334a4ba6c48c37db50b18', 0, 1);
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -559,15 +555,15 @@ INSERT INTO `sys_file` VALUES (2, 'QQ图片20211226105026.jpg', 'jpg', 116, 'htt
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
-  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '路径',
-  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图标',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '路径',
+  `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标',
+  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   `pid` int(0) NULL DEFAULT NULL COMMENT '父级id',
-  `page_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '页面路径',
+  `page_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '页面路径',
   `sort_num` int(0) NULL DEFAULT NULL COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -594,11 +590,11 @@ INSERT INTO `sys_menu` VALUES (19, '用户界面', '/front', 'el-icon-s-grid', N
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`  (
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
-  `flag` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '唯一标识',
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
+  `flag` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '唯一标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
@@ -614,7 +610,7 @@ CREATE TABLE `sys_role_menu`  (
   `role_id` int(0) NOT NULL COMMENT '角色id',
   `menu_id` int(0) NOT NULL COMMENT '菜单id',
   PRIMARY KEY (`role_id`, `menu_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色菜单关系表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色菜单关系表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -643,18 +639,18 @@ INSERT INTO `sys_role_menu` VALUES (2, 19);
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户名',
-  `password` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '密码',
-  `nickname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '昵称',
-  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '邮箱',
-  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '电话',
-  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '地址',
+  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
+  `password` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `nickname` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
+  `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
+  `phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '电话',
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '地址',
   `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
-  `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '头像',
-  `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色',
-  `identity_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '身份证号',
+  `avatar_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '头像',
+  `role` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色',
+  `identity_num` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '身份证号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
@@ -662,24 +658,10 @@ CREATE TABLE `sys_user`  (
 INSERT INTO `sys_user` VALUES (1, 'admin', 'admin', '管理员', 'admin@qq.com', '18827255507', '湖南常德', '2022-08-17 21:10:27', 'http://localhost:9090/file/c14af379be274b3dbc534feaa188ab22.jpg', 'ROLE_ADMIN', '130921197904067168');
 INSERT INTO `sys_user` VALUES (2, 'lsc', '908', '日落秦灵', 'lsc@qq.com', '13677889900', '江苏南京', '2022-08-18 22:10:14', NULL, 'ROLE_USER', '130921196808048916');
 INSERT INTO `sys_user` VALUES (3, 'qsr', '123', '去上日落私藏', 'qsr@qq.com', '15386197366', '湖南常德', '2022-08-18 22:10:18', 'http://localhost:9090/file/5da6909bc85c4b06bcb4ea27f2e8dc41.jpg', 'ROLE_USER', '130921198804094631');
-
--- ----------------------------
--- Table structure for t_own_s
--- ----------------------------
-DROP TABLE IF EXISTS `t_own_s`;
-CREATE TABLE `t_own_s`  (
-  `tid` int(0) NOT NULL COMMENT '列车编号',
-  `station_id` int(0) NOT NULL COMMENT '车站编号',
-  PRIMARY KEY (`tid`, `station_id`) USING BTREE,
-  INDEX `station_id`(`station_id`) USING BTREE,
-  CONSTRAINT `t_own_s_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `train` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `t_own_s_ibfk_2` FOREIGN KEY (`station_id`) REFERENCES `station` (`station_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_own_s
--- ----------------------------
-INSERT INTO `t_own_s` VALUES (1, 1);
+INSERT INTO `sys_user` VALUES (4, 'ztt', '123', '踢踢', 'ztt@qq.com', '15586378651', '河南南阳', '2022-08-21 12:39:09', NULL, 'ROLE_USER', NULL);
+INSERT INTO `sys_user` VALUES (5, 'wy', '123', '万小莹', 'wy@qq.com', '12345678911', '湖北孝感', '2022-08-21 12:43:55', NULL, 'ROLE_USER', NULL);
+INSERT INTO `sys_user` VALUES (6, 'gzz', '123', '壮壮', 'gzz@qq.com', '13245678911', '河北沧州', '2022-08-21 12:45:20', NULL, 'ROLE_USER', NULL);
+INSERT INTO `sys_user` VALUES (7, 'zzy', '123', '志远', 'zzy@qq.com', '12346578911', '河南三门峡', '2022-08-21 12:47:01', NULL, 'ROLE_USER', NULL);
 
 -- ----------------------------
 -- Table structure for train
@@ -688,13 +670,13 @@ DROP TABLE IF EXISTS `train`;
 CREATE TABLE `train`  (
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '列车编号',
   `dtid` int(0) NULL DEFAULT NULL COMMENT '列车详情编号',
-  `train_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '列车名称',
-  `train_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '列车类型',
-  `train_length` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '列车长度',
-  `carriage_num` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '车厢数量',
+  `train_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '列车名称',
+  `train_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '列车类型',
+  `train_length` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '列车长度',
+  `carriage_num` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '车厢数量',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `dtid`(`dtid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of train
@@ -712,6 +694,23 @@ INSERT INTO `train` VALUES (10, 10, 'K63', 'CRH380A型动车', '203', '8');
 INSERT INTO `train` VALUES (11, 11, 'G69', 'CRH380AL型动车', '403', '16');
 INSERT INTO `train` VALUES (12, 12, 'G64', 'CRH380BL型动车', '399.3', '16');
 INSERT INTO `train` VALUES (13, 13, 'Z2', 'CRH380B型动车', '200.3', '8');
-INSERT INTO `train` VALUES (14, 14, 'Z282', 'CRH380D型动车', '215.3', '8');
+
+-- ----------------------------
+-- Table structure for train_st
+-- ----------------------------
+DROP TABLE IF EXISTS `train_st`;
+CREATE TABLE `train_st`  (
+  `tid` int(0) NOT NULL COMMENT '列车编号',
+  `station_id` int(0) NOT NULL COMMENT '车站编号',
+  PRIMARY KEY (`tid`, `station_id`) USING BTREE,
+  INDEX `station_id`(`station_id`) USING BTREE,
+  CONSTRAINT `train_st_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `train` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `train_st_ibfk_2` FOREIGN KEY (`station_id`) REFERENCES `station` (`station_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of train_st
+-- ----------------------------
+INSERT INTO `train_st` VALUES (1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.example.springboot.controller.dto.UserAddressDto;
 import com.example.springboot.controller.dto.UserDTO;
 import com.example.springboot.controller.dto.UserPasswordDTO;
 import com.example.springboot.exception.ServiceException;
@@ -49,6 +50,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     private IMenuService menuService;
 
+
     @Override
     public UserDTO login(UserDTO userDTO) {
         User one = getUserInfo(userDTO);
@@ -90,6 +92,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new ServiceException(Constants.CODE_600, "密码错误");
         }
     }
+
+    @Override
+    public List<UserAddressDto> countAddress() {
+        return userMapper.countAddress();
+    }
+
 
     private User getUserInfo(UserDTO userDTO) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();

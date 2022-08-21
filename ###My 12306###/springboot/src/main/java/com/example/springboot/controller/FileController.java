@@ -37,7 +37,7 @@ public class FileController {
     /**
      * 文件上传接口
      * @param file 前端传递过来的文件
-     * @return
+     * @return qsr
      * @throws IOException
      */
     @PostMapping("/upload")

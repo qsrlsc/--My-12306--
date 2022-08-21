@@ -22,10 +22,10 @@
             >
                 <el-button type="danger" slot="reference">批量删除 <i class="el-icon-remove-outline"></i></el-button>
             </el-popconfirm>
-            <el-upload action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
+            <!-- <el-upload action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
                 <el-button type="primary" class="ml-5">导入 <i class="el-icon-bottom"></i></el-button>
             </el-upload>
-            <el-button type="primary" @click="exp" class="ml-5">导出 <i class="el-icon-top"></i></el-button>
+            <el-button type="primary" @click="exp" class="ml-5">导出 <i class="el-icon-top"></i></el-button> -->
         </div>
 
         <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
@@ -97,16 +97,14 @@
 
 <script>
     export default {
-        name: "Car",
+        name: "Train",
         data() {
             return {
                 tableData: [],
                 total: 0,
                 pageNum: 1,
                 pageSize: 10,
-                username: "",
-                email: "",
-                address: "",
+                trainName: "",
                 form: {},
                 dialogFormVisible: false,
                 multipleSelection: [],
@@ -118,13 +116,11 @@
         },
         methods: {
             load() {
-                this.request.get("/car/page", {
+                this.request.get("/train/page", {
                     params: {
                         pageNum: this.pageNum,
                         pageSize: this.pageSize,
-                        username: this.username,
-                        email: this.email,
-                        address: this.address,
+                        trainName: this.trainName,
                     }
                 }).then(res => {
 
@@ -138,7 +134,7 @@
                 // })
             },
             save() {
-                this.request.post("/car", this.form).then(res => {
+                this.request.post("/train", this.form).then(res => {
                     if (res.code === '200') {
                         this.$message.success("保存成功")
                         this.dialogFormVisible = false
@@ -157,7 +153,7 @@
                 this.dialogFormVisible = true
             },
             del(id) {
-                this.request.delete("/car/" + id).then(res => {
+                this.request.delete("/train/" + id).then(res => {
                     if (res.code === '200') {
                         this.$message.success("删除成功")
                         this.load()
@@ -172,7 +168,7 @@
             },
             delBatch() {
                 let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
-                this.request.post("/car/del/batch", ids).then(res => {
+                this.request.post("/train/del/batch", ids).then(res => {
                     if (res.code === '200') {
                         this.$message.success("批量删除成功")
                         this.load()
@@ -182,9 +178,7 @@
                 })
             },
             reset() {
-                this.username = ""
-                this.email = ""
-                this.address = ""
+                this.trainName = ""
                 this.load()
             },
             handleSizeChange(pageSize) {
@@ -198,7 +192,7 @@
                 this.load()
             },
             exp() {
-                window.open("http://localhost:9090/car/export")
+                window.open("http://localhost:9090/train/export")
             },
             handleExcelImportSuccess() {
                 this.$message.success("导入成功")

@@ -2,9 +2,9 @@
 <template>
     <div>
         <div style="margin: 10px 0">
-            <el-input style="width: 200px" placeholder="请输入订单编号" suffix-icon="el-icon-search" v-model="oid"></el-input>
-            <el-input style="width: 200px" placeholder="请输入乘客编号" suffix-icon="el-icon-message" class="ml-5" v-model="pid"></el-input>
-            <el-input style="width: 200px" placeholder="请输入列车编号" suffix-icon="el-icon-position" class="ml-5" v-model="tid"></el-input>
+            <el-input style="width: 200px" placeholder="请输入订单编号" suffix-icon="el-icon-search" v-model="oid" clearable></el-input>
+            <el-input style="width: 200px" placeholder="请输入乘客编号" suffix-icon="el-icon-message" class="ml-5" v-model="pid" clearable></el-input>
+            <el-input style="width: 200px" placeholder="请输入列车编号" suffix-icon="el-icon-position" class="ml-5" v-model="tid" clearable></el-input>
             <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
             <el-button type="warning" @click="reset">重置</el-button>
         </div>
@@ -34,9 +34,6 @@
             <el-table-column prop="pid" label="乘客编号" width="80"></el-table-column>
             <el-table-column prop="tid" label="列车编号" width="120"></el-table-column>
             <el-table-column prop="uid" label="用户编号" width="120">
-                <!--                <template v-slot="scope">-->
-                <!--                    <span v-if="scope.row.role">{{ roles.find(v => v.flag === scope.row.role) ? roles.find(v => v.flag === scope.row.role).name : ''  }}</span>-->
-                <!--                </template>-->
             </el-table-column>
             <el-table-column prop="doid" label="订单详情编号" ></el-table-column>
             <el-table-column prop="extraProduct" label="有无额外产品"></el-table-column>
@@ -52,7 +49,7 @@
                             icon="el-icon-info"
                             icon-color="red"
                             title="您确定删除吗？"
-                            @confirm="del(scope.row.id)"
+                            @confirm="del(scope.row.oid)"
                     >
                         <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
                     </el-popconfirm>
@@ -70,30 +67,44 @@
                     :total="total">
             </el-pagination>
         </div>
-
-        <el-dialog title="列车信息" :visible.sync="dialogFormVisible" width="30%" >
+<!-- 表单验证：列车编号存在，乘客编号存在 -->
+        <el-dialog title="订单信息" :visible.sync="dialogFormVisible" width="30%" v-dialogDrag>
             <el-form label-width="80px" size="small" >
                 <el-form-item label="乘客编号">
-                    <el-input v-model="form.pid" autocomplete="off"></el-input>
+                    <el-input v-model="form.pid" autocomplete="off" placeholder="请输入已存在的乘客"></el-input>
                 </el-form-item>
+
                 <el-form-item label="列车编号">
                     <el-input v-model="form.tid" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="用户编号">
-                    <el-input v-model="form.uid" autocomplete="off"></el-input>
+                    <el-input v-model="form.uid" autocomplete="off" placeholder="请输入已存在的用户"></el-input>
                 </el-form-item>
                 <el-form-item label="订单详情编号">
                     <el-input v-model="form.doid" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="有无额外产品">
+                    <el-form-item label="有无额外产品" :label-width="formLabelWidth">
+                        <el-select v-model="form.extraProduct" placeholder="请选择">
+                        <el-option label="有" value="有"></el-option>
+                        <el-option label="无" value="无"></el-option>
+                        </el-select>
+                    </el-form-item>
+                <!-- <el-form-item label="有无额外产品">
                     <el-input v-model="form.extra_product" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="有无保险">
+                </el-form-item> -->
+                <!-- <el-form-item label="有无保险">
                     <el-input v-model="form.insurance" autocomplete="off"></el-input>
-                </el-form-item>
+                </el-form-item> -->
+                    <el-form-item label="有无保险" :label-width="formLabelWidth">
+                        <el-select v-model="form.insurance" placeholder="请选择">
+                        <el-option label="有" value="有"></el-option>
+                        <el-option label="无" value="无"></el-option>
+                        </el-select>
+                    </el-form-item>
                 <el-form-item label="折扣">
                     <el-input v-model="form.discount" autocomplete="off"></el-input>
                 </el-form-item>
+
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -105,16 +116,16 @@
 
 <script>
     export default {
-        name: "Order",
+        name: "Orders",
         data() {
             return {
                 tableData: [],
                 total: 0,
                 pageNum: 1,
                 pageSize: 10,
-                username: "",
-                email: "",
-                address: "",
+                oid: "",
+                pid: "",
+                tid: "",
                 form: {},
                 dialogFormVisible: false,
                 multipleSelection: [],
@@ -126,13 +137,13 @@
         },
         methods: {
             load() {
-                this.request.get("/order/page", {
+                this.request.get("/orders/page", {
                     params: {
                         pageNum: this.pageNum,
                         pageSize: this.pageSize,
-                        username: this.username,
-                        email: this.email,
-                        address: this.address,
+                        oid: this.oid,
+                        pid: this.pid,
+                        tid: this.tid,
                     }
                 }).then(res => {
 
@@ -146,13 +157,14 @@
                 // })
             },
             save() {
-                this.request.post("/order", this.form).then(res => {
+                this.request.post("/orders", this.form).then(res => {
                     if (res.code === '200') {
-                        this.$message.success("保存成功")
+                        this.$message.success("保存成功")                        
                         this.dialogFormVisible = false
                         this.load()
-                    } else {
+                    } else{
                         this.$message.error("保存失败")
+
                     }
                 })
             },
@@ -164,8 +176,8 @@
                 this.form = JSON.parse(JSON.stringify(row))
                 this.dialogFormVisible = true
             },
-            del(id) {
-                this.request.delete("/order/" + id).then(res => {
+            del(oid) {
+                this.request.delete("/orders/" + oid).then(res => {
                     if (res.code === '200') {
                         this.$message.success("删除成功")
                         this.load()
@@ -179,8 +191,8 @@
                 this.multipleSelection = val
             },
             delBatch() {
-                let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
-                this.request.post("/order/del/batch", ids).then(res => {
+                let ids = this.multipleSelection.map(v => v.oid)  // [{}, {}, {}] => [1,2,3]
+                this.request.post("/orders/del/batch", ids).then(res => {
                     if (res.code === '200') {
                         this.$message.success("批量删除成功")
                         this.load()
@@ -188,11 +200,13 @@
                         this.$message.error("批量删除失败")
                     }
                 })
-            },
+            }, 
+
+
             reset() {
-                this.username = ""
-                this.email = ""
-                this.address = ""
+                this.oid = ""
+                this.pid = ""
+                this.tid = ""
                 this.load()
             },
             handleSizeChange(pageSize) {
@@ -206,12 +220,13 @@
                 this.load()
             },
             exp() {
-                window.open("http://localhost:9090/order/export")
+                window.open("http://localhost:9090/orders/export")
             },
             handleExcelImportSuccess() {
                 this.$message.success("导入成功")
                 this.load()
             }
+
         }
     }
 </script>

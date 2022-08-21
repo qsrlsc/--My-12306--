@@ -2,15 +2,16 @@
 <template>
     <div>
         <div style="margin: 10px 0">
-            <el-input style="width: 200px" placeholder="请输入车厢编号" suffix-icon="el-icon-position" class="ml-5" v-model="carriage"></el-input>
-            <el-input style="width: 200px" placeholder="请输入座位位置" suffix-icon="el-icon-message" class="ml-5" v-model="seatlocation"></el-input>
-            <el-input style="width: 200px" placeholder="请输入座位类型" suffix-icon="el-icon-search" v-model="seattype"></el-input>
+            <el-input style="width: 200px" placeholder="请输入车厢编号" suffix-icon="el-icon-position" class="ml-5" v-model="carriage" clearable></el-input>
+            <el-input style="width: 200px" placeholder="请输入座位位置" suffix-icon="el-icon-message" class="ml-5" v-model="seatlocation" clearable></el-input>
+            <el-input style="width: 200px" placeholder="请输入座位类型" suffix-icon="el-icon-search" v-model="seattype" clearable></el-input>
             <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
             <el-button type="warning" @click="reset">重置</el-button>
         </div>
 
         <div style="margin: 10px 0">
             <el-button type="primary" @click="handleAdd">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
+            <!-- 批量删除气泡确认框 -->
             <el-popconfirm
                     class="ml-5"
                     confirm-button-text='确定'
@@ -47,8 +48,8 @@
                             cancel-button-text='我再想想'
                             icon="el-icon-info"
                             icon-color="red"
-                            title="您确定删除吗？"
-                            @confirm="del(scope.row.id)"
+                            title="您确定删除吗？"                   
+                            @confirm="del(scope.row.sid)"
                     >
                         <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
                     </el-popconfirm>
@@ -67,19 +68,29 @@
             </el-pagination>
         </div>
 
-        <el-dialog title="列车信息" :visible.sync="dialogFormVisible" width="30%" >
+        <el-dialog title="座位信息" :visible.sync="dialogFormVisible" width="30%" v-dialogDrag>
             <el-form label-width="80px" size="small" >
                 <el-form-item label="列车编号">
-                    <el-input v-model="form.tid" autocomplete="off"></el-input>
+                    <el-input v-model="form.tid" autocomplete="off" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="座位类型">
+                <!-- <el-form-item label="座位类型">
                     <el-input v-model="form.seattype" autocomplete="off"></el-input>
+                </el-form-item> -->
+                <el-form-item label="座位类型" :label-width="formLabelWidth">
+                        <el-select v-model="form.seattype" placeholder="请选择">
+                        <el-option label="一等座" value="一等座"></el-option>
+                        <el-option label="二等座" value="二等座"></el-option>
+                        <el-option label="商务座" value="商务座"></el-option>
+                        <el-option label="无座" value="无座"></el-option>
+                        <el-option label="硬座" value="硬座"></el-option>
+                        <el-option label="卧铺" value="卧铺"></el-option>
+                        </el-select>
                 </el-form-item>
                 <el-form-item label="座位位置">
-                    <el-input v-model="form.seatlocation" autocomplete="off"></el-input>
+                    <el-input v-model="form.seatlocation" autocomplete="off" clearable></el-input>
                 </el-form-item>
                 <el-form-item label="座位所在车厢">
-                    <el-input v-model="form.carriage" autocomplete="off"></el-input>
+                    <el-input v-model="form.carriage" autocomplete="off" clearable></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -99,9 +110,9 @@
                 total: 0,
                 pageNum: 1,
                 pageSize: 10,
-                username: "",
-                email: "",
-                address: "",
+                carriage: "",
+                seatlocation: "",
+                seattype: "",
                 form: {},
                 dialogFormVisible: false,
                 multipleSelection: [],
@@ -117,9 +128,9 @@
                     params: {
                         pageNum: this.pageNum,
                         pageSize: this.pageSize,
-                        username: this.username,
-                        email: this.email,
-                        address: this.address,
+                        carriage: this.carriage,
+                        seatlocation: this.seatlocation,
+                        seattype: this.seattype,
                     }
                 }).then(res => {
 
@@ -151,8 +162,8 @@
                 this.form = JSON.parse(JSON.stringify(row))
                 this.dialogFormVisible = true
             },
-            del(id) {
-                this.request.delete("/seat/" + id).then(res => {
+            del(sid) {
+                this.request.delete("/seat/" + sid).then(res => {
                     if (res.code === '200') {
                         this.$message.success("删除成功")
                         this.load()
@@ -166,7 +177,7 @@
                 this.multipleSelection = val
             },
             delBatch() {
-                let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
+                let ids = this.multipleSelection.map(v => v.sid)  // [{}, {}, {}] => [1,2,3]
                 this.request.post("/seat/del/batch", ids).then(res => {
                     if (res.code === '200') {
                         this.$message.success("批量删除成功")
@@ -177,9 +188,9 @@
                 })
             },
             reset() {
-                this.username = ""
-                this.email = ""
-                this.address = ""
+                this.carriage = ""
+                this.seatlocation = ""
+                this.seattype = ""
                 this.load()
             },
             handleSizeChange(pageSize) {

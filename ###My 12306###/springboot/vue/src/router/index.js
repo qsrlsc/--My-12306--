@@ -36,6 +36,11 @@ const routes = [
         component: () => import('../views/front/BuyPiao.vue')
       },
       {
+        path: 'buysuccess',
+        name: 'buysuccess',
+        component: () => import('../views/front/BuySuccess.vue')
+      },
+      {
         path: 'password',
         name: 'Password',
         component: () => import('../views/front/Password.vue')
@@ -67,10 +72,13 @@ export const setRoutes = () => {
   const storeMenus = localStorage.getItem("menus");
   if (storeMenus) {
     // 拼装动态路由
-    const manageRoute = { path: '/', name: 'Manage', component: () => import('../views/Manage.vue'), redirect: "/home", children: [
+    const manageRoute = {
+        path: '/', name: 'Manage', component: () => import('../views/Manage.vue'), redirect: "/home",
+        children: [
         { path: 'person', name: '个人信息', component: () => import('../views/Person.vue')},
         { path: 'password', name: '修改密码', component: () => import('../views/Password.vue')},
-      ] }
+      ]
+    }
     const menus = JSON.parse(storeMenus)
     menus.forEach(item => {
       if (item.path) {  // 当且仅当path不为空的时候才去设置路由

@@ -9,6 +9,7 @@ import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.config.interceptor.AuthAccess;
+import com.example.springboot.controller.dto.UserAddressDto;
 import com.example.springboot.controller.dto.UserDTO;
 import com.example.springboot.controller.dto.UserPasswordDTO;
 import com.example.springboot.entity.User;
@@ -32,7 +33,7 @@ import java.util.List;
  * 前端控制器
  * </p>
  *
- * @author
+ * @author qsr
  * @since 2022-01-26
  */
 @RestController
@@ -41,6 +42,9 @@ public class UserController {
 
     @Value("${files.upload.path}")
     private String filesUploadPath;
+
+//    @Resource
+//    UserMapper userMapper;
 
     @Resource
     private IUserService userService;

@@ -5,7 +5,7 @@
         <el-card style="color: #409EFF">
           <div><i class="el-icon-user-solid" /> 用户总数</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold">
-            100
+            6
           </div>
         </el-card>
       </el-col>
@@ -27,14 +27,25 @@
       </el-col>
       <el-col :span="6">
         <el-card style="color: #E6A23C">
-          <div><i class="el-icon-s-shop" /> 门店总数</div>
+          <div><i class="el-icon-s-shop" /> 管理员数</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold">
-            20
+           1
           </div>
         </el-card>
       </el-col>
     </el-row>
+
     <el-row>
+      <el-col :span="12">
+        <div id="candlestick" style="width: 500px; height: 450px"></div>
+      </el-col>
+
+      <el-col :span="12">
+        <div id="usercount" style="width: 500px; height: 450px"></div>
+      </el-col>
+    </el-row>
+
+    <el-row  style="margin-top: 30px;">
       <el-col :span="12">
         <div id="main" style="width: 500px; height: 450px"></div>
       </el-col>
@@ -44,17 +55,15 @@
       </el-col>
     </el-row>
 
-    <el-row style="margin-top: 20px">
-      <el-col :span="12">
-        <div id="candlestick" style="width: 500px; height: 450px"></div>
-      </el-col>
-    </el-row>
+
 
   </div>
 </template>
 
 <script>
 import * as echarts from 'echarts'
+import {Axios as request} from "axios";
+
 
 export default {
   name: "Home",
@@ -86,22 +95,22 @@ export default {
       },
       series: [
         {
-          name: "星巴克",
+          name: "超级会员",
           data: [],
           type: 'bar'
         },
         {
-          name: "星巴克",
+          name: "超级会员",
           data: [],
           type: 'line'
         },
         {
-          name: "瑞幸咖啡",
+          name: "普通会员",
           data: [],
           type: 'bar'
         },
         {
-          name: "瑞幸咖啡",
+          name: "普通会员",
           data: [],
           type: 'line'
         }
@@ -189,7 +198,7 @@ export default {
     };
 
     const candlestickOption = {
-      title: {text: 'XX股票'},
+      title: {text: '12306系统使用率'},
       xAxis: {
         data: ['2022-1', '2022-2', '2022-3', '2022-4'],
       },
@@ -228,6 +237,43 @@ export default {
         }
       ]
     }
+    const usercountOption = {
+      title: {
+        text: '各地区用户比例统计图',
+        subtext: '虚拟数据',
+        left: 'left'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        trigger: 'item',
+        left: 'center'
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          mark: {show: true},
+          dataView: {show: true, readOnly: false},
+          restore: {show: true},
+          saveAsImage: {show: true}
+        }
+      },
+      series: [
+        {
+          name: '用户比例',
+          type: 'pie',
+          radius: [50, 150],
+          center: ['50%', '60%'],
+          roseType: 'area',
+          itemStyle: {
+            borderRadius: 8
+          },
+          data: []
+        }
+      ]
+    }
 
 
     var chartDom = document.getElementById('main');
@@ -239,6 +285,10 @@ export default {
     var candlestickDom = document.getElementById('candlestick');
     var candlestickChart = echarts.init(candlestickDom);
     candlestickChart.setOption(candlestickOption)
+
+
+    var usercountDom = document.getElementById('usercount');
+    var usercountChart = echarts.init(usercountDom);
 
     this.request.get("/echarts/members").then(res => {
       // 填空
@@ -260,6 +310,20 @@ export default {
       ]
       pieChart.setOption(pieOption)
     })
+
+    this.request.get("/echarts/count").then(res => {
+      if (res.code === '0') {
+        res.data.forEach(item => {
+          option.series[0].data.push({
+            name: item.address,
+            value: item.count
+          })
+        })
+        // 绘制图表
+        usercountChart.setOption(usercountOption);
+      }
+    })
+
   }
 }
 </script>

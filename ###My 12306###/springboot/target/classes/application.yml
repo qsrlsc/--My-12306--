@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/epidemic-sys?serverTimezone=GMT%2b8
+    url: jdbc:mysql://localhost:3306/mytrain?serverTimezone=GMT%2b8
     username: root
     password: qsr021203
   servlet:

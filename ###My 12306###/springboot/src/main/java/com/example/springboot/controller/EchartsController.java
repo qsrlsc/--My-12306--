@@ -28,6 +28,16 @@ public class EchartsController {
     public String epidemic() {
         return HttpUtil.get("https://c.m.163.com/ug/api/wuhan/app/data/list-total?t=" + System.currentTimeMillis());
     }
+    /**
+     * 统计数据
+     *
+     * @return
+     */
+    @GetMapping("/count")
+    public Result count() {
+//        User user = getUser(); // 当前登录的用户信息
+        return Result.success(userService.countAddress());
+    }
 
     @GetMapping("/example")
     public Result get() {
@@ -36,6 +46,7 @@ public class EchartsController {
         map.put("y", CollUtil.newArrayList(150, 230, 224, 218, 135, 147, 260));
         return Result.success(map);
     }
+
 
     @GetMapping("/members")
     public Result members() {
